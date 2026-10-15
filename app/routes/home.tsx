@@ -2,7 +2,10 @@ import type { Route } from "./+types/home";
 import Navbar from "../../components/Navbar";
 import { ArrowRight, ArrowUpRight, Clock, Layers } from "lucide-react";
 import Button from "../../components/ui/Button";
+import Upload from "../../components/Upload";
+import { useNavigate } from "react-router";
 
+/** Returns the home page title and description metadata. */
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -10,7 +13,16 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+/** Renders the landing page with a floor plan uploader and project previews. */
 export default function Home() {
+  const navigate = useNavigate()
+  /** Opens a visualizer route with a timestamp ID after an upload completes. */
+  const handleUploadComplete = async (base64Image: string) =>{
+    const newId = Date.now().toString()
+
+    navigate(`/visualizer/${newId}`)
+
+  }
   return (
     <div className="home">
       <Navbar/>
@@ -51,7 +63,7 @@ export default function Home() {
               <p>Supports JPG, PNG, formats upto 10MB</p>
             </div>
 
-            <p>Upload Images</p>
+            <Upload onComplete={handleUploadComplete}/>
           </div>
         </div>
       </section>
