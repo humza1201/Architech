@@ -11,6 +11,7 @@ type UploadProps = {
   onComplete?: (base64: string) => void;
 };
 
+/** Lets signed-in users select a file, shows simulated progress, and calls onComplete with its data URL. */
 const Upload: React.FC<UploadProps> = ( {onComplete} ) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -32,6 +33,7 @@ const Upload: React.FC<UploadProps> = ( {onComplete} ) => {
     [],
   );
 
+  /** Reads a selected file as a data URL and simulates progress for signed-in users. */
   const processFile = (selectedFile: File | undefined) => {
     if (!isSignedIn || !selectedFile) return;
 
@@ -73,21 +75,25 @@ const Upload: React.FC<UploadProps> = ( {onComplete} ) => {
     reader.readAsDataURL(selectedFile);
   };
 
+  /** Processes the first file selected through the input when signed in. */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!isSignedIn) return;
     processFile(event.currentTarget.files?.[0]);
   };
 
+  /** Prevents default drag behavior and highlights the dropzone for signed-in users. */
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (isSignedIn) setIsDragging(true);
   };
 
+  /** Clears the dropzone highlight when the dragged file leaves. */
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(false);
   };
 
+  /** Prevents default drop behavior and processes the first file when signed in. */
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(false);
